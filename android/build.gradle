@@ -1,0 +1,38 @@
+buildscript {
+    ext.kotlin_version = '2.0.10'  // Update this to the latest version
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Google Services classpath
+        classpath 'com.google.gms:google-services:4.3.13'
+        classpath "com.android.tools.build:gradle:7.4.2" // Example Gradle plugin version
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+// Clean task to delete build directories
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
+
+// Custom build directory configuration
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+// Ensuring all subprojects are evaluated after the app module
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+apply plugin: 'com.google.gms.google-services'
